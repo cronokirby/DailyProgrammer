@@ -87,3 +87,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+#Haskell settings
+*.hi
+*.o
+*.exe
