@@ -3,8 +3,10 @@ import System.IO
 import System.Environment
 
 type Code = String
-data Line = Line { indentation :: Int, sortPriority :: Int
-                 , code :: String } deriving (Show, Eq)
+data Line = Line { indentation :: Int   --Can be manipulated for priority
+                 , sortPriority :: Int
+                 , code :: String       --To extract the code after sorting
+                 } deriving (Show, Eq)
 
 compareLines :: Line -> Line -> Ordering
 compareLines line1 line2
@@ -16,6 +18,7 @@ compareLines line1 line2
       indentation1 = indentation line1
       indentation2 = indentation line2
 
+
 makeLine :: String -> Line
 makeLine line =
     let (spaces, code) = span (== ' ') line
@@ -24,7 +27,7 @@ makeLine line =
     in Line {indentation = indentation, sortPriority = priority, code = line}
 
 indentationLevel :: Code -> String -> Int
-indentationLevel "}" spaces
+indentationLevel "}" spaces 
     | null spaces = 100
     | otherwise   = length spaces +  2
 indentationLevel code spaces
@@ -41,10 +44,11 @@ prioritize code
     | "std::"    `isPrefixOf` code = 4
     | otherwise                    = 1
 
+
 main :: IO ()
 main = do
     (fileName : args) <- getArgs
-    withFile fileName ReadMode (\ handle -> do
+    withFile fileName ReadMode (\handle -> do
         contents <- hGetContents handle
         let codelines = map makeLine $ lines contents
         putStrLn $ unlines $ map code $ sortBy compareLines codelines)
