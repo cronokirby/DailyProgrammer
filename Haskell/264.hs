@@ -27,7 +27,7 @@ makeLine line =
     in Line {indentation = indentation, sortPriority = priority, code = line}
 
 indentationLevel :: Code -> String -> Int
-indentationLevel "}" spaces 
+indentationLevel "}" spaces
     | null spaces = 100
     | otherwise   = length spaces +  2
 indentationLevel code spaces
